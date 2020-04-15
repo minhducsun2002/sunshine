@@ -24,7 +24,7 @@ namespace sunshine.Services
             var _ = s.Split('\n');
             var __ = DateTime.Now.ToString("o", CultureInfo.InvariantCulture);
             Console.WriteLine($"{__} | {_[0]}");
-            foreach (var statement in _)
+            foreach (var statement in new ArraySegment<string>(_, 1, _.Length - 1))
                 Console.WriteLine($"{new String(' ', __.Length)} | {statement}");
         }
 
