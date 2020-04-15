@@ -40,9 +40,12 @@ namespace sunshine
 
         private IServiceProvider ConfigServices() 
         {
+            var commandService = new CommandService(new CommandServiceConfig(){
+               IgnoreExtraArgs = true 
+            });
             return new ServiceCollection()
                 .AddSingleton(_client)
-                .AddSingleton<CommandService>()
+                .AddSingleton(commandService)
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<LogService>()
                 .BuildServiceProvider();
