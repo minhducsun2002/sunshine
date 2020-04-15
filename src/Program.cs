@@ -1,4 +1,5 @@
 ﻿using System;
+using Color = System.Drawing.Color;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -6,7 +7,7 @@ using Discord.Commands;
 using dotenv.net;
 using sunshine.Services;
 using Microsoft.Extensions.DependencyInjection;
-// using sunshine.Commands;
+using Pastel;
 
 namespace sunshine
 {
@@ -23,7 +24,13 @@ namespace sunshine
             var client = s.GetRequiredService<DiscordSocketClient>();
             
             // registering handler
-            client.Ready += onReady;
+            client.Ready += () => {
+                s.GetRequiredService<LogService>()
+                    .success($@"Successfully logged in as {
+                        _client.CurrentUser.ToString().PastelBg(Color.DarkBlue).Pastel(Color.White)
+                    }.");
+                return Task.CompletedTask;
+            };
 
             await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("DISCORD_TOKEN"));
             await client.StartAsync();
@@ -44,6 +51,7 @@ namespace sunshine
                IgnoreExtraArgs = true 
             });
             return new ServiceCollection()
+                .AddSingleton<LogService>()
                 .AddSingleton(_client)
                 .AddSingleton(commandService)
                 .AddSingleton<CommandHandler>()
