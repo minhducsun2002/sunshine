@@ -56,7 +56,7 @@ namespace sunshine.Commands
                         "Statistics",
                         $"Users : **{bot + user}** (**{bot}** bot | **{user}** non-bot)\n"
                             + $"Roles : **{_.Roles.Count}**\n"
-                            + $"Channels : **{voice}** voice | **{category}** category | **{text}** text"
+                            + $"Channels : **{category}** category | **{voice}** voice | **{text}** text"
                     )
                     .Build()
             );
