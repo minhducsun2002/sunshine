@@ -41,9 +41,24 @@ namespace sunshine.Services
             if (!m.HasStringPrefix(prefix, ref argPos, StringComparison.OrdinalIgnoreCase)) return;
 
             var context = new SocketCommandContext(this.client, m);
-            var results = await commands.ExecuteAsync(context, argPos, services);
-            if (results.Error != null) 
-                Console.WriteLine(results.ErrorReason);
+            var result = await commands.ExecuteAsync(context, argPos, services);
+            if (result.Error != null) {
+                // who tf cares?
+                if (result.Error.Value == CommandError.UnknownCommand) return;
+                // if (result.Error.Value == CommandError.UnmetPrecondidtion) return;
+                // if (result.Error.Value == CommandError.BadArgCount) return;
+                // if (result.Error.Value == CommandError.ParseFailed) return;
+
+                // get logger
+                services.GetRequiredService<LogService>().error(result.ErrorReason);
+                await m.Channel.SendMessageAsync(
+                    $"Apologize, {m.Author.Mention}, executing your command failed due to the following reason :",
+                    false,
+                    new Discord.EmbedBuilder(){}
+                        .WithDescription($"```{result.ErrorReason}```")
+                        .Build()
+                );
+            }
         }
     }
 }
