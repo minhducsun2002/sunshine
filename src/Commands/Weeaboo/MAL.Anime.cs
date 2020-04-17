@@ -29,6 +29,7 @@ namespace sunshine.Commands
                         null, false,
                         err.WithDescription($"{m.Author.Mention}, I see nothing to search about. :frowning:").Build()
                     );
+                    return;
                 };
                 try {
                     var id = (await MAL.anime(query))[0].mal_id;
