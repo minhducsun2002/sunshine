@@ -62,6 +62,16 @@ namespace sunshine.Commands
             );
         }
 
+        [Command("icon")]
+        [Alias("servericon", "server-icon")]
+        public async Task icon() => await Context.Channel.SendMessageAsync(
+            null, false,
+            new EmbedBuilder(){}
+                .WithAuthor(Context.Guild.Name, Context.Guild.IconUrl)
+                .WithImageUrl(Context.Guild.IconUrl)
+                .Build()
+        );
+
         protected override void OnModuleBuilding(CommandService serv, ModuleBuilder b)
         {
             logger.success($"Loaded module {moduleName.Pastel(Color.Yellow)}.");
