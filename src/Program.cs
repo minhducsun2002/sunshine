@@ -56,6 +56,8 @@ namespace sunshine
                 .AddSingleton(commandService)
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<LogService>()
+                // bruh
+                .AddSingleton<MyAnimeList>()
                 .BuildServiceProvider();
         }
 
