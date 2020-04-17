@@ -64,7 +64,7 @@ namespace sunshine.Commands
 
         protected override void OnModuleBuilding(CommandService serv, ModuleBuilder b)
         {
-            logger.success($"Loaded command {moduleName.Pastel(Color.Yellow)}.");
+            logger.success($"Loaded module {moduleName.Pastel(Color.Yellow)}.");
         }
     }    
 }
