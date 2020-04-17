@@ -18,7 +18,7 @@ namespace sunshine
 
         public async Task MainAsync()
         {
-            DotEnv.Config();
+            DotEnv.Config(false);
 
             var s = ConfigServices();
             var client = s.GetRequiredService<DiscordSocketClient>();
