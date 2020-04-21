@@ -1,6 +1,8 @@
 using System;
+using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using Discord.Commands;
 using Discord.Commands.Builders;
 using sunshine.Services;
@@ -12,12 +14,12 @@ namespace sunshine.Commands
     public class RNGesus : ModuleBase<SocketCommandContext>
     {
         public LogService logger { get; set; }
-
+        private SHA512Managed sha = new SHA512Managed();
         private string moduleName = "random";
 
         [Command("rate")]
         public async Task ping([Remainder] string __ = null) {
-            const int scale = 10;
+            const uint scale = 10;
 
             var m = Context.Message;
             var err = new Discord.EmbedBuilder(){}.WithColor(DiscordColor.Red);
@@ -28,7 +30,7 @@ namespace sunshine.Commands
                 );
                 return;
             };
-            var _ = (new Random().Next() % (scale + 1));
+            var _ = (BitConverter.ToUInt64(sha.ComputeHash(Encoding.UTF8.GetBytes(__))) % (scale + 1));
             string[] strings = { 
                 "a big fat", "quite a poor", "quite a poor",
                 "an improvable", "an improvable", "a somewhat moderate",
