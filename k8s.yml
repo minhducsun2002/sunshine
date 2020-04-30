@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sunshine
+  labels:
+    name: sunshine
+    app: sunshine
+spec:
+  selector:
+    matchLabels:
+      app: sunshine
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sunshine
+    spec:
+      containers:
+        - name: sunshine
+          image: minhducsun2002/sunshine:latest
+          imagePullPolicy: Always
+          env:
+          - name: DISCORD_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: sunshine-production
+                key: DISCORD_TOKEN
+          - name: PREFIX
+            valueFrom:
+              secretKeyRef:
+                name: sunshine-production
+                key: PREFIX
