@@ -22,9 +22,10 @@ namespace sunshine
 
             var s = ConfigServices();
             var client = s.GetRequiredService<DiscordSocketClient>();
-            
+
             // registering handler
-            client.Ready += () => {
+            client.Ready += () =>
+            {
                 s.GetRequiredService<LogService>()
                     .success($@"Successfully logged in as {
                         _client.CurrentUser.ToString().PastelBg(Color.DarkBlue).Pastel(Color.White)
@@ -45,10 +46,11 @@ namespace sunshine
             return Task.CompletedTask;
         }
 
-        private IServiceProvider ConfigServices() 
+        private IServiceProvider ConfigServices()
         {
-            var commandService = new CommandService(new CommandServiceConfig(){
-               IgnoreExtraArgs = true 
+            var commandService = new CommandService(new CommandServiceConfig()
+            {
+                IgnoreExtraArgs = true
             });
             return new ServiceCollection()
                 .AddSingleton<LogService>()

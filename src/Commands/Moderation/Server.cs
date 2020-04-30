@@ -1,29 +1,27 @@
-using System.Drawing;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using Discord.Commands;
-using Discord.Commands.Builders;
 using EmbedBuilder = Discord.EmbedBuilder;
-using sunshine.Services;
-using Pastel;
+using sunshine.Classes;
+
 namespace sunshine.Commands
 {
-    public class ServerInfo : ModuleBase<SocketCommandContext>
+    public class ServerInfo : CommandModuleBase
     {
-        public LogService logger { get; set; }
+        ServerInfo() { this.name = "server-info"; }
 
         private string[] Verification = { "None", "Low", "Medium", "High", "Extreme" };
-        private string moduleName = "server-info";
 
         [Command("server")]
         [Alias("serverinfo")]
-        public async Task server() {
+        public async Task server()
+        {
             var _ = Context.Guild;
             long voice = 0, category = 0, text = 0;
 
             // listing channels
             var channels = _.Channels.GetEnumerator();
-            do 
+            do
             {
                 var __ = channels.Current;
                 if (__ is SocketCategoryChannel) category++;
@@ -41,7 +39,7 @@ namespace sunshine.Commands
 
             await Context.Channel.SendMessageAsync(
                 null, false,
-                new EmbedBuilder(){}
+                new EmbedBuilder() { }
                     .WithAuthor(_.Name, _.IconUrl)
                     .WithTitle("Server information")
                     .WithDescription($"ID : **`{_.Id}`**")
@@ -66,15 +64,12 @@ namespace sunshine.Commands
         [Alias("servericon", "server-icon")]
         public async Task icon() => await Context.Channel.SendMessageAsync(
             null, false,
-            new EmbedBuilder(){}
+            new EmbedBuilder() { }
                 .WithAuthor(Context.Guild.Name, Context.Guild.IconUrl)
                 .WithImageUrl(Context.Guild.IconUrl)
                 .Build()
         );
 
-        protected override void OnModuleBuilding(CommandService serv, ModuleBuilder b)
-        {
-            logger.success($"Loaded module {moduleName.Pastel(Color.Yellow)}.");
-        }
-    }    
+
+    }
 }

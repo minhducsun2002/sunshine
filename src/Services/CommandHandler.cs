@@ -13,7 +13,8 @@ namespace sunshine.Services
         private readonly CommandService commands;
         private readonly IServiceProvider services;
 
-        public CommandHandler (IServiceProvider serv) {
+        public CommandHandler(IServiceProvider serv)
+        {
             this.client = serv.GetRequiredService<DiscordSocketClient>();
             this.commands = serv.GetRequiredService<CommandService>();
             this.services = serv;
@@ -36,13 +37,14 @@ namespace sunshine.Services
             if (msg.Author.Id == this.client.CurrentUser.Id) return;
 
             string prefix = Environment.GetEnvironmentVariable("PREFIX");
-            
+
             int argPos = 0;
             if (!m.HasStringPrefix(prefix, ref argPos, StringComparison.OrdinalIgnoreCase)) return;
 
             var context = new SocketCommandContext(this.client, m);
             var result = await commands.ExecuteAsync(context, argPos, services);
-            if (result.Error != null) {
+            if (result.Error != null)
+            {
                 // who tf cares?
                 if (result.Error.Value == CommandError.UnknownCommand) return;
                 // if (result.Error.Value == CommandError.UnmetPrecondidtion) return;
@@ -54,7 +56,7 @@ namespace sunshine.Services
                 await m.Channel.SendMessageAsync(
                     $"Apologize, {m.Author.Mention}, executing your command failed due to the following reason :",
                     false,
-                    new Discord.EmbedBuilder(){}
+                    new Discord.EmbedBuilder() { }
                         .WithDescription($"```{result.ErrorReason}```")
                         .Build()
                 );

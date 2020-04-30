@@ -3,40 +3,39 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Discord.Commands.Builders;
 using sunshine.Services;
-using Pastel;
-using DiscordColor = Discord.Color;
-using Color = System.Drawing.Color;
+using sunshine.Classes;
 
 namespace sunshine.Commands
 {
     namespace MAL
     {
-        public class Anime : ModuleBase<SocketCommandContext>
+        public class Anime : CommandModuleBase
         {
-            public LogService logger { get; set; }
+            Anime() { this.name = "MAL.anime"; }
+
             public MyAnimeList MAL { get; set; }
 
-            private string moduleName = "MAL.anime";
-
             [Command("anime")]
-            public async Task anime([Remainder] string query = "") {
+            public async Task anime([Remainder] string query = "")
+            {
                 var m = Context.Message;
-                var err = new EmbedBuilder(){}.WithColor(DiscordColor.Red);
-                if (query == null || query.Length == 0) {
+                var err = new EmbedBuilder() { }.WithColor(Color.Red);
+                if (query == null || query.Length == 0)
+                {
                     await Context.Channel.SendMessageAsync(
                         null, false,
                         err.WithDescription($"{m.Author.Mention}, I see nothing to search about. :frowning:").Build()
                     );
                     return;
                 };
-                try {
+                try
+                {
                     var id = (await MAL.anime(query))[0].mal_id;
                     var _ = await MAL.anime(id);
                     await Context.Channel.SendMessageAsync(
                         null, false,
-                        new EmbedBuilder(){}
+                        new EmbedBuilder() { }
                             .WithTitle(_.title)
                             .WithUrl(_.url)
                             .WithImageUrl(_.image_url)
@@ -60,7 +59,9 @@ namespace sunshine.Commands
                             )
                             .Build()
                     );
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     await Context.Channel.SendMessageAsync(
                         null, false,
                         err
@@ -73,11 +74,6 @@ namespace sunshine.Commands
                     return;
                 }
             }
-
-            protected override void OnModuleBuilding(CommandService serv, ModuleBuilder b)
-            {
-                logger.success($"Loaded module {moduleName.Pastel(Color.Yellow)}.");
-            }
-        }    
+        }
     }
 }

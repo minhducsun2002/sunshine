@@ -6,7 +6,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace sunshine.Services 
+namespace sunshine.Services
 {
     namespace MyAnimeListResults
     {
@@ -16,7 +16,7 @@ namespace sunshine.Services
             public string url, image_url, title, synopsis, type;
             public bool airing;
             public float score;
-            public string start_date, end_date, rated;            
+            public string start_date, end_date, rated;
         }
 
         public class AnimeDetailed : Anime
@@ -27,7 +27,8 @@ namespace sunshine.Services
             public AnimeGenre[] genres;
         }
 
-        public struct AnimeAirings {
+        public struct AnimeAirings
+        {
             public string from, to;
             // bruh
             [JsonProperty(PropertyName = "string")]
@@ -39,18 +40,18 @@ namespace sunshine.Services
     {
         private string baseURL = "https://api.jikan.moe/v3";
         private readonly HttpClient client = new HttpClient();
-        public async Task<List<MyAnimeListResults.Anime>> anime (string _)
+        public async Task<List<MyAnimeListResults.Anime>> anime(string _)
         {
             var __ = HttpUtility.UrlEncode(_);
             var response = await client.GetStringAsync($"{baseURL}/search/anime?q={__}");
-            return ((JObject) JsonConvert.DeserializeObject(response))["results"]
+            return ((JObject)JsonConvert.DeserializeObject(response))["results"]
                 .ToObject<List<MyAnimeListResults.Anime>>();
         }
 
-        public async Task<MyAnimeListResults.AnimeDetailed> anime (Int64 _)
+        public async Task<MyAnimeListResults.AnimeDetailed> anime(Int64 _)
         {
             var response = await client.GetStringAsync($"{baseURL}/anime/{_}");
-            return ((JObject) JsonConvert.DeserializeObject(response)).ToObject<MyAnimeListResults.AnimeDetailed>();
+            return ((JObject)JsonConvert.DeserializeObject(response)).ToObject<MyAnimeListResults.AnimeDetailed>();
         }
     }
 }

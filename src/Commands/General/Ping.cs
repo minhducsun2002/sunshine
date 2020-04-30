@@ -1,28 +1,21 @@
-using System.Drawing;
 using System.Threading.Tasks;
 using Discord.Commands;
-using Discord.Commands.Builders;
-using sunshine.Services;
-using Pastel;
+using sunshine.Classes;
 
 namespace sunshine.Commands
 {
-    public class Ping : ModuleBase<SocketCommandContext>
+    public class Ping : CommandModuleBase
     {
-        public LogService logger { get; set; }
-
-        private string moduleName = "ping";
+        Ping() { this.name = "ping"; }
 
         [Command("ping")]
-        public async Task ping() {
+        public async Task ping()
+        {
             await Context.Message.Channel.SendMessageAsync(
                 $"Pong!\nRoundtrip latency : {Context.Client.Latency}ms."
             );
         }
 
-        protected override void OnModuleBuilding(CommandService serv, ModuleBuilder b)
-        {
-            logger.success($"Loaded module {moduleName.Pastel(Color.Yellow)}.");
-        }
-    }    
+
+    }
 }
