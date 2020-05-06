@@ -29,50 +29,39 @@ namespace sunshine.Commands
                     );
                     return;
                 };
-                try
-                {
-                    var id = (await MAL.anime(query))[0].mal_id;
-                    var _ = await MAL.anime(id);
-                    await Context.Channel.SendMessageAsync(
-                        null, false,
-                        new EmbedBuilder() { }
-                            .WithTitle(_.title)
-                            .WithUrl(_.url)
-                            .WithImageUrl(_.image_url)
-                            .WithDescription(_.synopsis)
-                            .AddField(
-                                "Titles",
-                                $"**Japanese** : {_.title_japanese}"
-                                + (_.title_english.Length > 0 ? $"\n**English** : {_.title_english}" : "")
-                                + (_.title_synonyms.Length > 0 ? $"\n**Alternatives** : {String.Join(", ", _.title_synonyms)}" : "")
-                            )
-                            .AddField(
-                                "General information",
-                                $"**Type** : {_.type}"
-                                + $"\n**Source** : {_.source}"
-                                + $"\n**Episodes** : {_.episodes}"
-                                + $"\n**Premiere** : {_.premiered}"
-                                + $"\n**Duration** : {_.duration}"
-                                + $"\n**Rating** : {_.rating}"
-                                + $"\n{(_.airing ? "**Currently airing**" : $"**Aired** : {_.aired.@string}")}"
-                                + $"\n**Genres** : {String.Join(", ", _.genres.Select(g => g.name).ToArray())}"
-                            )
-                            .Build()
-                    );
-                }
-                catch (Exception e)
-                {
-                    await Context.Channel.SendMessageAsync(
-                        null, false,
-                        err
-                            .WithDescription(
-                                $"Apologize, {m.Author.Mention}, but an error occurred :frowning:\n"
-                                + $"```{e.ToString()}```"
-                            )
-                            .Build()
-                    );
-                    return;
-                }
+                var id = (await MAL.anime(query))[0].mal_id;
+                var _ = await MAL.anime(id);
+                await Context.Channel.SendMessageAsync(
+                    null, false,
+                    new EmbedBuilder()
+                    {
+                        Title = _.title,
+                        Url = _.url,
+                        ImageUrl = _.image_url,
+                        Description = (
+                            _.synopsis.Length > 2000 ? _.synopsis.Substring(0, 2000) + "..." : _.synopsis
+                        )
+                    } 
+                        .AddField(
+                            "Titles",
+                            $"**Japanese** : {_.title_japanese}"
+                            + (_.title_english.Length > 0 ? $"\n**English** : {_.title_english}" : "")
+                            + (_.title_synonyms.Length > 0 ? $"\n**Alternatives** : {String.Join(", ", _.title_synonyms)}" : "")
+                        )
+                        .AddField(
+                            "General information",
+                            $"**Type** : {_.type}"
+                            + $"\n**Source** : {_.source}"
+                            + (_.episodes == null ? "" : $"\n**Episode** : {_.episodes}")
+                            + $"\n**Premiere** : {_.premiered}"
+                            + $"\n**Duration** : {_.duration}"
+                            + $"\n**Rating** : {_.rating}"
+                            + $"\n{(_.airing ? "**Currently airing**" : $"**Aired** : {_.aired.@string}")}"
+                            + $"\n**Genre** : {String.Join(", ", _.genres.Select(g => g.name).ToArray())}"
+                            + $"\n**Studio** : {String.Join(", ", _.studios.Select(g => g.name).ToArray())}"
+                        )
+                        .Build()
+                );
             }
         }
     }

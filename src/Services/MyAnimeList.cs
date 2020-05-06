@@ -12,7 +12,9 @@ namespace sunshine.Services
     {
         public class Anime
         {
-            public Int64 mal_id, episodes;
+            [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+            public Int64 mal_id;
+            public Int64? episodes;
             public string url, image_url, title, synopsis, type;
             public bool airing;
             public float score;
@@ -25,6 +27,7 @@ namespace sunshine.Services
             public string[] title_synonyms;
             public AnimeAirings aired;
             public AnimeGenre[] genres;
+            public AnimeStudio[] studios;
         }
 
         public struct AnimeAirings
@@ -35,6 +38,7 @@ namespace sunshine.Services
             public string @string;
         }
         public struct AnimeGenre { public Int64 mal_id; public string type, name, url; }
+        public struct AnimeStudio { public string type, name, url; }
     }
     public class MyAnimeList
     {
