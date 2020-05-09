@@ -9,7 +9,6 @@ namespace sunshine.Classes
     public abstract class CommandModuleBase : ModuleBase<SocketCommandContext>
     {
         public LogService logger { get; set; }
-        // public ICommandContext Context;
         protected string name;
         protected override void OnModuleBuilding(CommandService serv, ModuleBuilder b)
         {

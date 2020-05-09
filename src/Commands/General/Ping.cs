@@ -9,6 +9,7 @@ namespace sunshine.Commands
         Ping() { this.name = "ping"; }
 
         [Command("ping")]
+        [Category("General")]
         public async Task ping()
         {
             await Context.Message.Channel.SendMessageAsync(

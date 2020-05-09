@@ -26,6 +26,7 @@ namespace sunshine.Commands
         private readonly HttpClient httpClient = new HttpClient();
 
         [Command("urban")]
+        [Category("Information")]
         public async Task urban([Remainder] string query = null)
         {
             var m = Context.Message;

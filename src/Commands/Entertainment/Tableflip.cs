@@ -17,6 +17,7 @@ namespace sunshine.Commands
 
         [Command("tableflip")]
         [Alias("tf")]
+        [Category("Entertainment")]
         public async Task flip()
         {
             var _ = await Context.Channel.SendMessageAsync(frames[0]);

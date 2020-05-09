@@ -17,6 +17,7 @@ namespace sunshine.Commands
             public MyAnimeList MAL { get; set; }
 
             [Command("anime")]
+            [Category("Weebs")]
             public async Task anime([Remainder] string query = "")
             {
                 var m = Context.Message;

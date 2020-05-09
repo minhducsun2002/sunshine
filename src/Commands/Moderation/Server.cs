@@ -14,6 +14,7 @@ namespace sunshine.Commands
 
         [Command("server")]
         [Alias("serverinfo")]
+        [Category("Moderation")]
         public async Task server()
         {
             var _ = Context.Guild;

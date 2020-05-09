@@ -10,6 +10,7 @@ namespace sunshine.Commands
     {
         Insult() { this.name = "insult"; }
         [Command("insult")]
+        [Category("Entertainment")]
         public async Task speak(SocketUser _ = null)
         {
             if (_ == null) _ = Context.Message.Author;

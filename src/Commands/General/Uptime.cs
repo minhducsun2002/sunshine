@@ -12,6 +12,7 @@ namespace sunshine.Commands
         Uptime() { this.name = "uptime"; }
 
         [Command("uptime")]
+        [Category("General")]
         public async Task uptime()
         {
             var _ = (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString(@"d\:hh\:mm\:ss\.fff");

@@ -14,6 +14,7 @@ namespace sunshine.Commands
         RNGesus() { this.name = "rng"; }
 
         [Command("rate")]
+        [Category("Entertainment")]
         public async Task ping([Remainder] string __ = null)
         {
             const uint scale = 10;

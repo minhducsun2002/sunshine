@@ -11,6 +11,7 @@ namespace sunshine.Commands
     {
         Reverse() { this.name = "reverse"; }
         [Command("reverse")]
+        [Category("Entertainment")]
         public async Task flip([Remainder] string _ = null)
         {
             var c = Context.Channel;

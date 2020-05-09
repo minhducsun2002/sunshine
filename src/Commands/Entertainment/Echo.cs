@@ -1,4 +1,3 @@
-using Color = System.Drawing.Color;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -13,7 +12,9 @@ namespace sunshine.Commands
         [Command("say")]
         [Alias("echo", "repeat")]
         [RequireBotPermission(ChannelPermission.ManageMessages)]
-        public async Task flip([Remainder] string _ = null)
+        [Summary("Too shy to say something? I can help you with that.")]
+        [Category("Entertainment")]
+        public async Task flip([Remainder] [Name("Text to say")] string _ = null)
         {
             var c = Context.Channel;
             if (_ == null || _.Length < 1)
