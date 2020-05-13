@@ -13,6 +13,23 @@ namespace sunshine.Commands
         private SHA512Managed sha = new SHA512Managed();
         RNGesus() { this.name = "rng"; }
 
+        [Command("pick")]
+        [Category("Entertainment")]
+        public async Task pick([Remainder] string _ = "")
+        {
+            var m = Context.Message;
+            if (_.Length == 0) {
+                await ReplyAsync($"{m.Author.Mention}, I choose you.");
+                return;
+            }
+
+            // split
+            var __ = _.Split("\n");
+            var random = new Random((Int32) BitConverter.ToUInt64(sha.ComputeHash(Encoding.UTF8.GetBytes(_))));
+            await ReplyAsync($"{m.Author.Mention}, I would choose **{__[((UInt32) random.Next()) % __.Length]}**");
+
+        }
+
         [Command("rate")]
         [Category("Entertainment")]
         public async Task ping([Remainder] string __ = null)
