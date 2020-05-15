@@ -13,6 +13,16 @@ namespace sunshine.Commands
         private SHA512Managed sha = new SHA512Managed();
         RNGesus() { this.name = "rng"; }
 
+        private string pickGenerator(string[] _, Int32 seed = 1)
+        {
+            var random = new Random(BitConverter.ToInt32(
+                sha.ComputeHash(Encoding.UTF8.GetBytes(
+                    String.Join("", _)
+                ))
+            ) * seed);
+            return _[((UInt32) random.Next()) % _.Length];
+        }
+
         [Command("pick")]
         [Category("Entertainment")]
         public async Task pick([Remainder] string _ = "")
@@ -25,8 +35,7 @@ namespace sunshine.Commands
 
             // split
             var __ = _.Split("\n");
-            var random = new Random((Int32) BitConverter.ToUInt64(sha.ComputeHash(Encoding.UTF8.GetBytes(_))));
-            await ReplyAsync($"{m.Author.Mention}, I would choose **{__[((UInt32) random.Next()) % __.Length]}**");
+            await ReplyAsync($"{m.Author.Mention}, I would choose **{pickGenerator(__, (Int32) DateTime.Now.ToBinary())}**");
 
         }
 
