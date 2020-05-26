@@ -24,15 +24,20 @@ namespace sunshine.Commands
                 var err = new EmbedBuilder() { }.WithColor(Color.Red);
                 if (query == null || query.Length == 0)
                 {
-                    await Context.Channel.SendMessageAsync(
+                    await ReplyAsync(
                         null, false,
                         err.WithDescription($"{m.Author.Mention}, I see nothing to search about. :frowning:").Build()
                     );
                     return;
                 };
-                var id = (await MAL.anime(query))[0].mal_id;
+                var result = await MAL.anime(query);
+                if (result.Count < 1) {
+                    await ReplyAsync($"Apologies, {m.Author.Mention}, couldn't find anything that matched.");
+                    return;
+                };
+                var id = result[0].mal_id;
                 var _ = await MAL.anime(id);
-                await Context.Channel.SendMessageAsync(
+                await ReplyAsync(
                     null, false,
                     new EmbedBuilder()
                     {
