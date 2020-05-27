@@ -15,6 +15,7 @@ namespace sunshine.Commands
         [Command("translate")]
         [Summary("Let's speak in another language.")]
         [Category("Information")]
+        [Alias("t")]
         public async Task exec(
             [Name("Source language")] string src = "auto",
             [Name("Target language")] string dst = "en",
