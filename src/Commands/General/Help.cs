@@ -62,13 +62,9 @@ namespace sunshine.Commands
             var cmd = new Dictionary<string, CommandInfo>();
 
             commands.Commands.ToList().ForEach(a => {
-                // categories
-                CategoryAttribute c =
-                    a.Attributes.FirstOrDefault(a => (a is CategoryAttribute)) as CategoryAttribute;
-                
                 // skip nulls
-                if (c == null) return;
-                
+                if (!(a.Attributes.FirstOrDefault(a => (a is CategoryAttribute)) is CategoryAttribute c)) return;
+
                 if (!cat.ContainsKey(c.Category)) cat.Add(c.Category, new Dictionary<string, CommandInfo>());
                 cat[c.Category].Add(a.Name, a);
 

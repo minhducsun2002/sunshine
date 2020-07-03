@@ -42,7 +42,7 @@ namespace sunshine
 
         private Task onReady()
         {
-            this.Log($"Logged in as {_client.CurrentUser.ToString()}, ready to serve {_client.Guilds.Count} guilds.");
+            this.Log($"Logged in as {_client.CurrentUser}, ready to serve {_client.Guilds.Count} guilds.");
             return Task.CompletedTask;
         }
 

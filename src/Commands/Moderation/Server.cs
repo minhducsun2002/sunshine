@@ -46,9 +46,7 @@ namespace sunshine.Commands
                     .WithDescription($"ID : **`{_.Id}`**")
                     .AddField(
                         "Details",
-                        $@"Created : **{_.CreatedAt.UtcDateTime.ToString(
-                            "dddd, MMMM dd, yyyy - HH:mm:ss tt"
-                        )}**" + "\n"
+                        $@"Created : **{_.CreatedAt.UtcDateTime:dddd, MMMM dd, yyyy - HH:mm:ss tt}**" + "\n"
                             + $"Owner : {_.Owner.Mention}\n"
                             + $"Voice region : **{_.VoiceRegionId.toSentencedCase()}**\n"
                             + $"Verification status : **{Verification[(int)_.VerificationLevel]}**"
