@@ -117,7 +117,7 @@ namespace sunshine.Commands
                                 : $"**\nPublished** : {_.published.@string}")
                             + (_.volumes == null ? "" : $"\n**Volumes** : {_.volumes}")
                             + (_.chapters == null ? "" : $"\n**Chapters** : {_.chapters}")
-                            + $"\n**Score** : {_.score}"
+                            + (_.score == null ? "" : $"\n**Score** : {_.score}")
                             + $"\n**Genre** : {string.Join(", ", _.genres.Select(g => $"[{g.name}]({g.url})").ToArray())}"
                             + $"\n**Author** : {string.Join(", ", _.authors.Select(g => $"[{g.name}]({g.url})").ToArray())}"
                         )

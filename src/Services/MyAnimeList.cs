@@ -58,7 +58,7 @@ namespace sunshine.Services
             public string[] title_synonyms;
             public MangaPublished published;
             public bool publishing;
-            public float score;
+            public float? score;
         }
 
         public class MangaPublished
