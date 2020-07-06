@@ -10,13 +10,18 @@ namespace sunshine.Services
 {
     namespace MyAnimeListResults
     {
+        public class MALBaseObject
+        {
+            public long mal_id;
+            public string url;
+        }
+
         // Anime
-        public class Anime
+        public class Anime : MALBaseObject
         {
             [JsonProperty(NullValueHandling = NullValueHandling.Include)]
-            public long mal_id;
             public long? episodes;
-            public string url, image_url, title, synopsis, type;
+            public string image_url, title, synopsis, type;
             public bool airing;
             public float score;
             public string start_date, end_date, rated;
@@ -38,21 +43,20 @@ namespace sunshine.Services
             [JsonProperty(PropertyName = "string")]
             public string @string;
         }
-        public struct MALObject { public long mal_id; public string type, name, url; }
-        public struct AnimeStudio { public string type, name, url; }
+        public class MALObject : MALBaseObject
+        {
+            public string type, name;
+        }
+        public class AnimeStudio : MALObject {}
 
         // manga
-        public class Manga
-        {
-            // we only need this tbh
-            public long mal_id;
-        }
-        public class MangaDetailed
+        public class Manga : MALBaseObject {}
+        public class MangaDetailed : Manga
         {
             [JsonProperty(NullValueHandling = NullValueHandling.Include)]
-            public long mal_id, rank;
+            public long rank;
             public long? volumes, chapters;
-            public string url, image_url, title, title_english, title_japanese,
+            public string image_url, title, title_english, title_japanese,
                 status, synopsis, type;
             public MALObject[] genres, authors;
             public string[] title_synonyms;
@@ -68,6 +72,18 @@ namespace sunshine.Services
             public string @string;
         }
 
+        public class Character : MALBaseObject {}
+        public class CharacterDetailed : Character
+        {
+            public string name, name_kanji, about, image_url;
+            public string[] nicknames;
+            public CharacterAppearanceRecord[] animeography, mangaography;
+        }
+
+        public class CharacterAppearanceRecord : MALBaseObject 
+        {
+            public string name, image_url;
+        }
     }
     public class MyAnimeList
     {
@@ -113,6 +129,21 @@ namespace sunshine.Services
             return ((JObject)JsonConvert.DeserializeObject(
                 await _base_info("manga", _)
             )).ToObject<MyAnimeListResults.MangaDetailed>();
+        }
+
+        public async Task<List<MyAnimeListResults.Character>> character(string _)
+        {
+            return ((JObject)JsonConvert.DeserializeObject(
+                await _base_search("character", _)
+            ))["results"]
+                .ToObject<List<MyAnimeListResults.Character>>();
+        }
+
+        public async Task<MyAnimeListResults.CharacterDetailed> character(long _)
+        {
+            return ((JObject)JsonConvert.DeserializeObject(
+                await _base_info("character", _)
+            )).ToObject<MyAnimeListResults.CharacterDetailed>();
         }
     }
 }

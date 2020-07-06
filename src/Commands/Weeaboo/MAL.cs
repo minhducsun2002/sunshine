@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
 using sunshine.Services;
@@ -72,7 +73,7 @@ namespace sunshine.Commands
             }
 
             [Command("manga")]
-            [Category("Weebs")]            
+            [Category("Weebs")]           
             public async Task manga([Remainder] string query = "")
             {
                 var m = Context.Message;
@@ -123,6 +124,62 @@ namespace sunshine.Commands
                         )
                         .Build()
                 );
+
+            }
+
+            [Command("character")]
+            [Category("Weebs")]
+            public async Task character([Remainder] string query = "")
+            {
+                var m = Context.Message;
+                var err = new EmbedBuilder() { }.WithColor(Color.Red);
+                if (query == null || query.Length == 0)
+                {
+                    await ReplyAsync(
+                        null, false,
+                        err.WithDescription($"{m.Author.Mention}, I see nothing to search about. :frowning:").Build()
+                    );
+                    return;
+                };
+                var result = await mal.character(query);
+                if (result.Count < 1) {
+                    await ReplyAsync($"Apologies, {m.Author.Mention}, couldn't find anything that matched.");
+                    return;
+                };
+                var id = result[0].mal_id;
+                var _ = await mal.character(id);
+                var e = new EmbedBuilder()
+                    {
+                        Title = _.name + (_.name_kanji.Length > 0 ? _.name_kanji : ""),
+                        Url = _.url,
+                        ImageUrl = _.image_url,
+                        Description = (
+                            Regex.Unescape(
+                                _.about.Length > 2000 ? _.about.Substring(0, 2000) + "..." : _.about
+                            )
+                        )
+                    };
+                if (_.animeography.Length > 1)
+                    e.AddField(
+                        "Anime",
+                        $@"{
+                            string.Join(
+                                ", ",
+                                _.animeography.Select(a => $"[{a.name}]({a.url})")
+                            )
+                        }"
+                    );
+                if (_.animeography.Length > 1)
+                    e.AddField(
+                        "Manga",
+                        $@"{
+                            string.Join(
+                                ", ",
+                                _.mangaography.Select(a => $"[{a.name}]({a.url})")
+                            )
+                        }"
+                    );
+                await ReplyAsync(null, false, e.Build());
 
             }
         }
