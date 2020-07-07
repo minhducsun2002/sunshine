@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Discord.Commands;
 using sunshine.Classes;
@@ -21,7 +22,7 @@ namespace sunshine.Commands
         public async Task flip()
         {
             var _ = await Context.Channel.SendMessageAsync(frames[0]);
-            foreach (var frame in frames)
+            foreach (var frame in new ArraySegment<string>(frames, 1, 4))
             {
                 Task.Run(() => { while (true) { }; }).Wait(300);
                 await _.ModifyAsync(x => x.Content = frame);
