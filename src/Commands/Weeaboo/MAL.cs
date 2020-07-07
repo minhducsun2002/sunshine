@@ -38,9 +38,12 @@ namespace sunshine.Commands
                 };
                 var id = result[0].mal_id;
                 var _ = await mal.anime(id);
-                await ReplyAsync(
-                    null, false,
-                    new EmbedBuilder()
+                var t = (
+                    (_.title_japanese == null ? "" : $"**Japanese** : {_.title_japanese}")
+                    + (_.title_english == null ? "" : $"\n**English** : {_.title_english}")
+                    + (_.title_synonyms == null ? "" : $"\n**Alternatives** : {String.Join(", ", _.title_synonyms)}")
+                );
+                var _out = new EmbedBuilder()
                     {
                         Title = _.title,
                         Url = _.url,
@@ -48,13 +51,10 @@ namespace sunshine.Commands
                         Description = (
                             _.synopsis.Length > 2000 ? _.synopsis.Substring(0, 2000) + "..." : _.synopsis
                         )
-                    } 
-                        .AddField(
-                            "Titles",
-                            $"**Japanese** : {_.title_japanese}"
-                            + (_.title_english.Length > 0 ? $"\n**English** : {_.title_english}" : "")
-                            + (_.title_synonyms.Length > 0 ? $"\n**Alternatives** : {String.Join(", ", _.title_synonyms)}" : "")
-                        )
+                    };
+                if (t.Length > 0) _out.AddField("Titles", t);
+                await ReplyAsync(
+                    null, false, _out
                         .AddField(
                             "General information",
                             $"**Type** : {_.type}"
