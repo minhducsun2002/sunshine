@@ -24,7 +24,7 @@ namespace sunshine.Commands
             var _ = await Context.Channel.SendMessageAsync(frames[0]);
             foreach (var frame in new ArraySegment<string>(frames, 1, 4))
             {
-                Task.Run(() => { while (true) { }; }).Wait(300);
+                await Task.Delay(300);
                 await _.ModifyAsync(x => x.Content = frame);
             }
         }
