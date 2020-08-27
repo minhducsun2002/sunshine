@@ -23,6 +23,7 @@ namespace sunshine.Services
             public long? episodes;
             public string image_url, title, synopsis, type;
             public bool airing;
+            [JsonProperty(NullValueHandling = NullValueHandling.Include)]
             public float score;
             public string start_date, end_date, rated;
         }

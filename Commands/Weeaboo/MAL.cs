@@ -41,7 +41,7 @@ namespace sunshine.Commands
                 var t = (
                     (_.title_japanese == null ? "" : $"**Japanese** : {_.title_japanese}")
                     + (_.title_english == null ? "" : $"\n**English** : {_.title_english}")
-                    + (_.title_synonyms == null ? "" : $"\n**Alternatives** : {String.Join(", ", _.title_synonyms)}")
+                    + ((_.title_synonyms == null || _.title_synonyms.Length < 1) ? "" : $"\n**Alternatives** : {String.Join(", ", _.title_synonyms)}")
                 );
                 var _out = new EmbedBuilder()
                     {
@@ -60,7 +60,7 @@ namespace sunshine.Commands
                             $"**Type** : {_.type}"
                             + $"\n**Source** : {_.source}"
                             + (_.episodes == null ? "" : $"\n**Episode** : {_.episodes}")
-                            + $"\n**Premiere** : {_.premiered}"
+                            + (_.premiered == null ? "" : $"\n**Premiere** : {_.premiered}")
                             + $"\n**Duration** : {_.duration}"
                             + $"\n**Rating** : {_.rating}"
                             + $"\n{(_.airing ? "**Currently airing**" : $"**Aired** : {_.aired.@string}")}"
@@ -107,7 +107,7 @@ namespace sunshine.Commands
                         .AddField(
                             "Titles",
                             $"**Japanese** : {_.title_japanese}"
-                            + (_.title_english.Length > 0 ? $"\n**English** : {_.title_english}" : "")
+                            + (_.title_english != null ? $"\n**English** : {_.title_english}" : "")
                             + (_.title_synonyms.Length > 0 ? $"\n**Alternatives** : {string.Join(", ", _.title_synonyms)}" : "")
                         )
                         .AddField(
@@ -150,7 +150,7 @@ namespace sunshine.Commands
                 var _ = await mal.character(id);
                 var e = new EmbedBuilder()
                     {
-                        Title = _.name + (_.name_kanji.Length > 0 ? _.name_kanji : ""),
+                        Title = _.name + (_.name_kanji ?? ""),
                         Url = _.url,
                         ImageUrl = _.image_url,
                         Description = (

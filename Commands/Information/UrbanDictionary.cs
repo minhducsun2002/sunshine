@@ -47,6 +47,13 @@ namespace sunshine.Commands
                 );
                 var _ = ((JObject)JsonConvert.DeserializeObject(response))["list"]
                     .ToObject<List<UrbanResponse>>();
+                if (_ == null || _.Count < 1) {
+                    await ReplyAsync(
+                        null, false,
+                        err.WithDescription($"{m.Author.Mention}, I found no results. :frowning:").Build()
+                    );
+                    return;
+                }
                 string def = _[0].definition, eg = _[0].example;
                 await Context.Channel.SendMessageAsync(
                     null, false,
