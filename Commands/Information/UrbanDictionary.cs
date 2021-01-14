@@ -14,9 +14,20 @@ namespace sunshine.Commands
 {
     public class UrbanResponse
     {
-        public string definition { get; set; }
-        public string example { get; set; }
-        public string permalink { get; set; }
+        [JsonProperty("definition")]
+        public string Definition { get; set; }
+        
+        [JsonProperty("example")]
+        public string Example { get; set; }
+        
+        [JsonProperty("permalink")]
+        public string Permalink { get; set; }
+        
+        [JsonProperty("thumbs_up")]
+        public int Likes { get; set; }
+        
+        [JsonProperty("thumbs_down")]
+        public int Dislikes { get; set; }
     }
 
     public class Urban : CommandModuleBase
@@ -30,8 +41,8 @@ namespace sunshine.Commands
         public async Task urban([Remainder] string query = null)
         {
             var m = Context.Message;
-            var err = new EmbedBuilder() { }.WithColor(DiscordColor.Red);
-            if (query == null || query.Length == 0)
+            var err = new EmbedBuilder().WithColor(DiscordColor.Red);
+            if (string.IsNullOrEmpty(query))
             {
                 await Context.Channel.SendMessageAsync(
                     null, false,
@@ -54,13 +65,22 @@ namespace sunshine.Commands
                     );
                     return;
                 }
-                string def = _[0].definition, eg = _[0].example;
+                
+                // choose the response with highest rating
+                _.Sort(
+                    (record1, record2) =>
+                        (record1.Likes - record1.Dislikes) - (record2.Likes - record2.Dislikes)
+                );
+
+                var chosen = _[0];
+                string def = chosen.Definition, eg = chosen.Example;
+                if (string.IsNullOrEmpty(eg.Trim())) eg = "[no example]";
                 await Context.Channel.SendMessageAsync(
                     null, false,
                     new EmbedBuilder() { }
                         .WithAuthor("Urban Dictionary", "https://vgy.me/ScvJzi.jpg")
                         .WithTitle($"Urban Dictionary definition for **{query}**")
-                        .WithUrl(_[0].permalink)
+                        .WithUrl(chosen.Permalink)
                         .AddField(
                             "Definition",
                             def.Substring(0, Math.Min(MAX_LEN, def.Length))
@@ -71,7 +91,7 @@ namespace sunshine.Commands
                             eg.Substring(0, Math.Min(MAX_LEN, eg.Length))
                             + (eg.Length > 1000 ? "..." : "")
                         )
-                        .WithFooter($"Definition 1 of {_.Capacity}")
+                        .WithFooter($"Definition 1 of {_.Count} | {chosen.Likes} 👍 | {chosen.Dislikes} 👎")
                         .WithTimestamp(DateTime.Now)
                         .WithColor(0, 255, 255)
                         .Build()
