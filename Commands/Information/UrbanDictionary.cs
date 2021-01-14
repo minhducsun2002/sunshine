@@ -14,20 +14,11 @@ namespace sunshine.Commands
 {
     public class UrbanResponse
     {
-        [JsonProperty("definition")]
-        public string Definition { get; set; }
-        
-        [JsonProperty("example")]
-        public string Example { get; set; }
-        
-        [JsonProperty("permalink")]
-        public string Permalink { get; set; }
-        
-        [JsonProperty("thumbs_up")]
-        public int Likes { get; set; }
-        
-        [JsonProperty("thumbs_down")]
-        public int Dislikes { get; set; }
+        [JsonProperty("definition")] public string Definition { get; set; }
+        [JsonProperty("example")] public string Example { get; set; }
+        [JsonProperty("permalink")] public string Permalink { get; set; }
+        [JsonProperty("thumbs_up")] public int Likes { get; set; }
+        [JsonProperty("thumbs_down")] public int Dislikes { get; set; }
     }
 
     public class Urban : CommandModuleBase
@@ -77,7 +68,7 @@ namespace sunshine.Commands
                 if (string.IsNullOrEmpty(eg.Trim())) eg = "[no example]";
                 await Context.Channel.SendMessageAsync(
                     null, false,
-                    new EmbedBuilder() { }
+                    new EmbedBuilder()
                         .WithAuthor("Urban Dictionary", "https://vgy.me/ScvJzi.jpg")
                         .WithTitle($"Urban Dictionary definition for **{query}**")
                         .WithUrl(chosen.Permalink)
@@ -103,8 +94,7 @@ namespace sunshine.Commands
                     null, false,
                     err
                         .WithDescription(
-                            $"Apologize, {m.Author.Mention}, but an error occurred :frowning:\n"
-                            + $"```{e.ToString()}```"
+                            $"Apologize, {m.Author.Mention}, but an error occurred :frowning:\n```{e}```"
                         )
                         .Build()
                 );
