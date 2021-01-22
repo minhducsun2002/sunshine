@@ -54,7 +54,7 @@ namespace sunshine.Services
         public class Manga : MALBaseObject {}
         public class MangaDetailed : Manga
         {
-            [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public long rank;
             public long? volumes, chapters;
             public string image_url, title, title_english, title_japanese,
