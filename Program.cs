@@ -8,6 +8,7 @@ using dotenv.net;
 using sunshine.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Pastel;
+using Interactivity;
 
 namespace sunshine
 {
@@ -50,11 +51,13 @@ namespace sunshine
         {
             var commandService = new CommandService(new CommandServiceConfig()
             {
-                IgnoreExtraArgs = true
+                IgnoreExtraArgs = true,
+                DefaultRunMode = RunMode.Async
             });
             return new ServiceCollection()
                 .AddSingleton<LogService>()
                 .AddSingleton(_client)
+                .AddSingleton(new InteractivityService(_client))
                 .AddSingleton(commandService)
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<LogService>()

@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Discord.Commands;
 using Discord;
+using Interactivity;
+using Interactivity.Pagination;
 using DiscordColor = Discord.Color;
 using sunshine.Classes;
 using Newtonsoft.Json;
@@ -23,6 +26,8 @@ namespace sunshine.Commands
 
     public class Urban : CommandModuleBase
     {
+        public InteractivityService InteractivityService { get; set; }
+
         Urban() { this.name = "urban"; }
         private int MAX_LEN = 1000;
         private readonly HttpClient httpClient = new HttpClient();
@@ -63,12 +68,17 @@ namespace sunshine.Commands
                         (record1.Likes - record1.Dislikes) - (record2.Likes - record2.Dislikes)
                 );
 
-                var chosen = _[0];
-                string def = chosen.Definition, eg = chosen.Example;
-                if (string.IsNullOrEmpty(eg.Trim())) eg = "[no example]";
-                await Context.Channel.SendMessageAsync(
-                    null, false,
-                    new EmbedBuilder()
+                if (!_.Any())
+                {
+                    await Context.Channel.SendMessageAsync("I found no results.");
+                    return;
+                }
+
+                var embeds = _.Select((chosen, index) =>
+                {
+                    string def = chosen.Definition, eg = chosen.Example;
+                    if (string.IsNullOrEmpty(eg.Trim())) eg = "[no example]";
+                    return new EmbedBuilder()
                         .WithAuthor("Urban Dictionary", "https://vgy.me/ScvJzi.jpg")
                         .WithTitle($"Urban Dictionary definition for **{query}**")
                         .WithUrl(chosen.Permalink)
@@ -82,11 +92,31 @@ namespace sunshine.Commands
                             eg.Substring(0, Math.Min(MAX_LEN, eg.Length))
                             + (eg.Length > 1000 ? "..." : "")
                         )
-                        .WithFooter($"Definition 1 of {_.Count} | {chosen.Likes} 👍 | {chosen.Dislikes} 👎")
+                        .WithFooter($"Definition {index + 1} of {_.Count} | {chosen.Likes} 👍 | {chosen.Dislikes} 👎")
                         .WithTimestamp(DateTime.Now)
                         .WithColor(0, 255, 255)
-                        .Build()
-                );
+                        .Build();
+                }).ToArray();
+
+                if (embeds.Length == 1)
+                    await Context.Channel.SendMessageAsync("", false, embeds.First());
+                else
+                {
+                    await InteractivityService.SendPaginatorAsync(
+                        new StaticPaginatorBuilder()
+                            .WithEmotes(
+                                new Dictionary<IEmote, PaginatorAction>
+                                {
+                                    {new Emoji("\u2B05"), PaginatorAction.Backward},
+                                    {new Emoji("\u27A1"), PaginatorAction.Forward}
+                                })
+                            .WithCancelledEmbed(null)
+                            .WithTimoutedEmbed(null)
+                            .WithDeletion(DeletionOptions.None)
+                            .WithFooter(PaginatorFooter.None).WithPages(embeds.Select(PageBuilder.FromEmbed)).Build(),
+                        Context.Channel,
+                        TimeSpan.FromSeconds(20));
+                }
             }
             catch (HttpRequestException e)
             {
@@ -100,7 +130,5 @@ namespace sunshine.Commands
                 );
             }
         }
-
-
     }
 }
