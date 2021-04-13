@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
@@ -13,16 +14,6 @@ namespace sunshine.Commands
         private SHA512Managed sha = new SHA512Managed();
         RNGesus() { this.name = "rng"; }
 
-        private string pickGenerator(string[] _, Int32 seed = 1)
-        {
-            var random = new Random(BitConverter.ToInt32(
-                sha.ComputeHash(Encoding.UTF8.GetBytes(
-                    String.Join("", _)
-                ))
-            ) * seed);
-            return _[((UInt32) random.Next()) % _.Length];
-        }
-
         [Command("pick")]
         [Category("Entertainment")]
         public async Task pick([Remainder] string _ = "")
@@ -34,8 +25,12 @@ namespace sunshine.Commands
             }
 
             // split
-            var __ = _.Split("\n");
-            await ReplyAsync($"{m.Author.Mention}, I would choose **{pickGenerator(__, (Int32) DateTime.Now.ToBinary())}**");
+            var __ = _.Split("/");
+
+            var choice = new WebClient().DownloadString(
+                $"https://www.random.org/integers/?num=1&min=1&max=${__.Length}&col=1&base=10&format=plain&rnd=new"
+            );
+            await ReplyAsync($"{m.Author.Mention}, I would choose **{__[Convert.ToInt32(choice)]}**");
 
         }
 
