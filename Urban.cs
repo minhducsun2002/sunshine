@@ -13,6 +13,18 @@ using Qmmands;
 
 namespace sunshine
 {
+    internal class UrbanPagedView : PagedView
+    {
+        public UrbanPagedView(PageProvider pageProvider) : base(pageProvider)
+        {
+            FirstPageButton.Label = "First definition"; FirstPageButton.Emoji = null;
+            LastPageButton.Label = "Last definition"; LastPageButton.Emoji = null;
+            PreviousPageButton.Label = "Previous"; PreviousPageButton.Emoji = null;
+            NextPageButton.Label = "Next"; NextPageButton.Emoji = null;
+            RemoveComponent(StopButton);
+        }
+    }
+    
     internal class UrbanResponse
     {
         [JsonProperty("definition")] public string Definition { get; set; }
@@ -73,7 +85,7 @@ namespace sunshine
                 };
             }).ToArray();
 
-            return Pages(embeds);
+            return View(new UrbanPagedView(new ListPageProvider(embeds)));
         }
     }
 }
