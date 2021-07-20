@@ -1,4 +1,7 @@
+using System;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Disqord.Bot;
 using Qmmands;
@@ -7,17 +10,21 @@ namespace sunshine
 {
     public class Rate : DiscordModuleBase
     {
-        private HttpClient httpClient = new();
-
+        private readonly SHA512Managed sha = new SHA512Managed();
+        
         [Command("rate")]
         public async Task<DiscordCommandResult> Exec([Remainder] string query = "")
         {
-            var pick = await httpClient.GetStringAsync(
-                $"https://www.random.org/integers/?num=1&min=1&max={101}&col=1&base=10&format=plain&rnd=new"
-            );
-            if (string.IsNullOrWhiteSpace(query)) return Reply("I rate the void 100%.");
-            var rating = int.Parse(pick) - 1;
-            return Reply($"I would give \"**{query}**\" a rating of {rating}%.");
+            if (string.IsNullOrWhiteSpace(query)) return Reply("I rate the void 10 out of 10.");
+            string[] strings = {
+                "a big fat", "quite a poor", "quite a poor",
+                "an improvable", "an improvable", "a somewhat moderate",
+                "a pretty moderate", "a prominent", "a high",
+                "a high", "a solid"
+            };
+            var scale = (uint) strings.Length;
+            var rating = BitConverter.ToUInt64(sha.ComputeHash(Encoding.UTF8.GetBytes(query))) % (scale + 1);
+            return Reply($"I would give \"**{query}**\" {strings[rating]} {rating}/{scale - 1}.");
         }
     }
 }
