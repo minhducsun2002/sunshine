@@ -83,7 +83,7 @@ namespace sunshine
         }
     }
     
-    public class MyAnimeList : DiscordModuleBase
+    public partial class MyAnimeList : DiscordModuleBase
     {
         private static readonly HttpClient Client = new();
         internal const string BaseURL = "https://api.jikan.moe/v3";
@@ -99,7 +99,7 @@ namespace sunshine
                 }{(bold ? "**" : "")}"
                 : "");
 
-        private async Task<string> BaseSearch(string obj, string q)
+        private static async Task<string> BaseSearch(string obj, string q)
             => await Client.GetStringAsync($"{BaseURL}/search/{obj}?q={HttpUtility.UrlEncode(q)}");
 
         [Command("anime")]
@@ -108,7 +108,7 @@ namespace sunshine
         {
             if (string.IsNullOrWhiteSpace(query)) return Reply("I saw nothing to search about!");
             var response = await BaseSearch("anime", query);
-            var animes = JObject.Parse(response)["results"].ToObject<Anime[]>();
+            var animes = JObject.Parse(response)["results"]!.ToObject<Anime[]>()!;
 
             if (animes.Length == 0)
                 return Reply("I found no results. Are you sure you aren't searching for illegal stuff?");
