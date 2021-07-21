@@ -68,8 +68,8 @@ namespace sunshine
                                     ? $"**Currently airing** {MyAnimeList.GetDate(anime.Aired.From, anime.Aired.To, true)}"
                                     : $"**Aired** : {MyAnimeList.GetDate(anime.Aired.From, anime.Aired.To, true, false)}"
                                     )}"
-                                + $"\n**Genre** : {string.Join(", ", anime.Genres.Select(g => g.Name).ToArray())}"
-                                + $"\n**Studio** : {string.Join(", ", anime.Studios.Select(g => g.Name).ToArray())}"
+                                + $"\n**Genre** : {string.Join(", ", anime.Genres.Select(g => $"[{g.Name}]({g.Url})").ToArray())}"
+                                + $"\n**Studio** : {string.Join(", ", anime.Studios.Select(g => $"[{g.Name}]({g.Url})").ToArray())}"
                     }
                 }
             };
