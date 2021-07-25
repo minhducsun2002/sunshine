@@ -23,7 +23,7 @@ namespace sunshine
                 "a high", "a solid"
             };
             var scale = (uint) strings.Length;
-            var rating = BitConverter.ToUInt64(sha.ComputeHash(Encoding.UTF8.GetBytes(query))) % (scale + 1);
+            var rating = BitConverter.ToUInt64(sha.ComputeHash(Encoding.UTF8.GetBytes(query))) % scale;
             return Reply($"I would give \"**{query}**\" {strings[rating]} {rating}/{scale - 1}.");
         }
     }
