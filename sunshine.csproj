@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Disqord.Bot" Version="1.0.0-07192021-71" />
     <PackageReference Include="dotenv.net" Version="3.0.0" />
+    <PackageReference Include="Humanizer" Version="2.11.10" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Qmmands" Version="4.0.0" />
