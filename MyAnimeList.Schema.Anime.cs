@@ -26,7 +26,7 @@ namespace sunshine
         [JsonProperty("type")] public string Type = "";
         [JsonProperty("airing")] public bool Airing;
         [JsonProperty("score", NullValueHandling = NullValueHandling.Include)] public float Score;
-        [JsonProperty("start_date")] public string StartDate = "";
+        [JsonProperty("start_date")] public string? StartDate = "";
         [JsonProperty("end_date")] public string? EndDate;
         [JsonProperty("rated")] public string Rated = "";
     }

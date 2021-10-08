@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Disqord;
@@ -11,6 +12,7 @@ using Disqord.Bot;
 using Disqord.Extensions.Interactivity.Menus;
 using Disqord.Extensions.Interactivity.Menus.Paged;
 using Disqord.Rest;
+using Humanizer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Qmmands;
@@ -87,17 +89,31 @@ namespace sunshine
     {
         private static readonly HttpClient Client = new();
         internal const string BaseURL = "https://api.jikan.moe/v3";
-        
-        internal static string GetDate(string startDate, string? endDate, bool toBeInterpolated = false, bool bold = true) =>
-            (endDate == null ? $"{(toBeInterpolated ? "s" : "S")}ince " : "")
-            + $@"{(bold ? "**" : "")}{
-                DateTime.Parse(startDate, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind).ToLongDateString()
-            }{(bold ? "**" : "")}"
-            + (endDate != null
-                ? $@" to {(bold ? "**" : "")}{
-                    DateTime.Parse(endDate, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind).ToLongDateString()
-                }{(bold ? "**" : "")}"
-                : "");
+
+        internal static string GetDate(string? startDate, string? endDate, bool toBeInterpolated = false,
+            bool bold = true)
+        {
+            StringBuilder output = new();
+            if (startDate != null)
+            {
+                output.Append(endDate != null ? "from" : "since");
+                output.Append(DateTime.Parse(startDate, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
+                    .ToLongDateString());
+            }
+
+            if (endDate != null)
+            {
+                output.Append("to");
+                output.Append(DateTime.Parse(endDate, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
+                    .ToLongDateString());
+            }
+
+            var @out = output.ToString();
+            if (bold) @out = $"**{@out}**";
+            if (toBeInterpolated)
+                @out = @out.Transform(To.SentenceCase);
+            return @out;
+        }
 
         private static async Task<string> BaseSearch(string obj, string q)
             => await Client.GetStringAsync($"{BaseURL}/search/{obj}?q={HttpUtility.UrlEncode(q)}");
