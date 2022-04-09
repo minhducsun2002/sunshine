@@ -10,7 +10,7 @@ namespace sunshine
     public class Pick : DiscordModuleBase
     {
         private HttpClient httpClient = new();
-        
+
         [Command("pick")]
         public async Task<DiscordCommandResult> Exec([Remainder] string query = "")
         {

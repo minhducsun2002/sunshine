@@ -10,13 +10,13 @@ namespace sunshine
         [JsonProperty("mal_id")] public long MyAnimeListId;
         [JsonProperty("url")] public string Url = "";
     }
-    
+
     internal class MyAnimeListObject : MyAnimeListBaseObject
     {
         [JsonProperty("type")] public string Type = "";
         [JsonProperty("name")] public string Name = "";
     }
-    
+
     internal class Anime : MyAnimeListBaseObject
     {
         [JsonProperty("episodes", NullValueHandling = NullValueHandling.Include)] public long? Episodes;
@@ -46,7 +46,7 @@ namespace sunshine
         [JsonProperty("studios")] public AnimeStudio[] Studios = Array.Empty<AnimeStudio>();
     }
 
-    internal class AnimeStudio : MyAnimeListObject {}
+    internal class AnimeStudio : MyAnimeListObject { }
     internal struct AnimeAirings
     {
         [JsonProperty("from")] public string From;

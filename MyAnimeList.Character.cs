@@ -21,14 +21,14 @@ namespace sunshine
         public CharacterPagedView(PageProvider pageProvider, long[] characterIds) : base(pageProvider, new LocalMessage())
         {
             this.characterIds = characterIds;
-            
+
             FirstPageButton.Label = "First result"; FirstPageButton.Emoji = null;
             PreviousPageButton.Label = "Previous"; PreviousPageButton.Emoji = null;
             NextPageButton.Label = "Next"; NextPageButton.Emoji = null;
             LastPageButton.Label = "Last result"; LastPageButton.Emoji = null;
             RemoveComponent(StopButton);
         }
-        
+
         [Button(Label = "Detailed", Style = LocalButtonComponentStyle.Primary)]
         public async ValueTask Confirm(ButtonEventArgs e)
         {
@@ -37,7 +37,7 @@ namespace sunshine
             )!;
 
             character.About = character.About.Replace("\n\n", "\n");
-            
+
             var embed = new LocalEmbed
             {
                 Title = character.Name + (string.IsNullOrWhiteSpace(character.NameKanji) ? "" : $" ({character.NameKanji})"),
@@ -46,43 +46,43 @@ namespace sunshine
                 Description = character.About.Length > 2000 ? character.About[..2000] + "..." : character.About,
                 Fields = new List<LocalEmbedField>()
             };
-            
+
             if (character.Nicknames.Length != 0)
                 embed.Fields.Add(new LocalEmbedField
                 {
                     Name = "Nicknames",
                     Value = string.Join(", ", character.Nicknames)
                 });
-            
+
             if (character.Mangaography.Length != 0)
                 embed.Fields.Add(new LocalEmbedField
                 {
                     Name = "Mangaography",
                     Value = string.Join(", ", character.Mangaography.Select(manga => $"[{manga.Name}]({manga.Url}) ({manga.Role})"))
                 });
-            
+
             if (character.Animeography.Length != 0)
                 embed.Fields.Add(new LocalEmbedField
                 {
                     Name = "Animeography",
                     Value = string.Join(", ", character.Animeography.Select(anime => $"[{anime.Name}]({anime.Url}) ({anime.Role})"))
                 });
-            
+
             if (character.VoiceActors.Length != 0)
                 embed.Fields.Add(new LocalEmbedField
                 {
                     Name = "Voice actors",
                     Value = string.Join(", ", character.VoiceActors.Select(va => $"[{va.Name}]({va.Url}) ({va.Language})"))
                 });
-            
-            await e.Interaction.Response().ModifyMessageAsync(new LocalInteractionResponse
+
+            await e.Interaction.Response().ModifyMessageAsync(new LocalInteractionMessageResponse()
             {
-                Embeds = new[] {embed}
+                Embeds = { embed }
             });
             Menu.Stop();
         }
     }
-    
+
     public partial class MyAnimeList
     {
         [Command("character")]
@@ -93,7 +93,7 @@ namespace sunshine
 
             var response = await BaseSearch("character", query);
             var characters = JObject.Parse(response)["results"]!.ToObject<CharacterSearch[]>()!;
-            
+
             if (characters.Length == 0) return Reply("I found no results.");
             var characterIds = characters.Select(character => character.MyAnimeListId).ToArray();
             var embeds = characters.Select(character => new Page

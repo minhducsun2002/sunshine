@@ -20,14 +20,14 @@ namespace sunshine
         public MangaPagedView(PageProvider pageProvider, long[] mangaIds) : base(pageProvider, new LocalMessage())
         {
             this.mangaIds = mangaIds;
-            
+
             FirstPageButton.Label = "First result"; FirstPageButton.Emoji = null;
             PreviousPageButton.Label = "Previous"; PreviousPageButton.Emoji = null;
             NextPageButton.Label = "Next"; NextPageButton.Emoji = null;
             LastPageButton.Label = "Last result"; LastPageButton.Emoji = null;
             RemoveComponent(StopButton);
         }
-        
+
         [Button(Label = "Detailed", Style = LocalButtonComponentStyle.Primary)]
         public async ValueTask Confirm(ButtonEventArgs e)
         {
@@ -67,14 +67,14 @@ namespace sunshine
             };
 
             if (!string.IsNullOrWhiteSpace(t)) embed.Fields.Insert(0, new LocalEmbedField { Name = "Title", Value = t });
-            await e.Interaction.Response().ModifyMessageAsync(new LocalInteractionResponse
+            await e.Interaction.Response().ModifyMessageAsync(new LocalInteractionMessageResponse()
             {
-                Embeds = new[] {embed}
+                Embeds = { embed }
             });
             Menu.Stop();
         }
     }
-    
+
     public partial class MyAnimeList
     {
         [Command("manga")]
@@ -84,10 +84,10 @@ namespace sunshine
             if (string.IsNullOrWhiteSpace(query)) return Reply("I saw nothing to search about!");
             var response = await BaseSearch("manga", query);
             var mangas = JObject.Parse(response)["results"]!.ToObject<Manga[]>()!;
-            
+
             if (mangas.Length == 0)
                 return Reply("I found no results. Are you sure you aren't searching for illegal stuff?");
-            
+
             var mangaIds = mangas.Select(manga => manga.MyAnimeListId);
 
             var embeds = mangas.Select(manga =>
@@ -114,7 +114,7 @@ namespace sunshine
                     }
                 };
 
-                return new Page {Embeds = new List<LocalEmbed> {embed}};
+                return new Page { Embeds = new List<LocalEmbed> { embed } };
             });
 
             return View(new MangaPagedView(new ListPageProvider(embeds), mangaIds.ToArray()));

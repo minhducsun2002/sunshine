@@ -26,7 +26,7 @@ namespace sunshine
         public AnimePagedView(PageProvider pageProvider, long[] animeIds) : base(pageProvider, new LocalMessage())
         {
             this.animeIds = animeIds;
-            
+
             FirstPageButton.Label = "First result"; FirstPageButton.Emoji = null;
             PreviousPageButton.Label = "Previous"; PreviousPageButton.Emoji = null;
             NextPageButton.Label = "Next"; NextPageButton.Emoji = null;
@@ -35,7 +35,7 @@ namespace sunshine
             LastPageButton.Label = "Last result"; LastPageButton.Emoji = null;
             RemoveComponent(StopButton);
         }
-        
+
         [Button(Label = "Detailed", Style = LocalButtonComponentStyle.Primary)]
         public async ValueTask Confirm(ButtonEventArgs e)
         {
@@ -77,14 +77,14 @@ namespace sunshine
             };
 
             if (!string.IsNullOrWhiteSpace(t)) embed.Fields.Insert(0, new LocalEmbedField { Name = "Title", Value = t });
-            await e.Interaction.Response().ModifyMessageAsync(new LocalInteractionResponse
+            await e.Interaction.Response().ModifyMessageAsync(new LocalInteractionMessageResponse
             {
-                Embeds = new[] {embed}
+                Embeds = { embed }
             });
             Menu.Stop();
         }
     }
-    
+
     public partial class MyAnimeList : DiscordModuleBase
     {
         private static readonly HttpClient Client = new();
@@ -153,7 +153,7 @@ namespace sunshine
                     }
                 };
 
-                return new Page {Embeds = new List<LocalEmbed> {embed}};
+                return new Page { Embeds = new List<LocalEmbed> { embed } };
             });
 
             return View(new AnimePagedView(new ListPageProvider(embeds), animeIds));

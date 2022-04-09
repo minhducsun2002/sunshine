@@ -11,7 +11,7 @@ namespace sunshine
     public class Rate : DiscordModuleBase
     {
         private readonly SHA512Managed sha = new SHA512Managed();
-        
+
         [Command("rate")]
         public async Task<DiscordCommandResult> Exec([Remainder] string query = "")
         {
@@ -22,7 +22,7 @@ namespace sunshine
                 "a pretty moderate", "a prominent", "a high",
                 "a high", "a solid"
             };
-            var scale = (uint) strings.Length;
+            var scale = (uint)strings.Length;
             var rating = BitConverter.ToUInt64(sha.ComputeHash(Encoding.UTF8.GetBytes(query))) % scale;
             return Reply($"I would give \"**{query}**\" {strings[rating]} {rating}/{scale - 1}.");
         }

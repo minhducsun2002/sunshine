@@ -20,11 +20,11 @@ namespace sunshine
             foreach (var guild in Bot.GetGuilds().Values)
                 if (guild.MemberCount <= 100)
                     await Bot.Chunker.ChunkAsync(guild, stoppingToken);
-            
+
             await base.ExecuteAsync(stoppingToken);
         }
     }
-    
+
     public class ServerInfo : DiscordGuildModuleBase
     {
         [Command("serverinfo", "server")]
@@ -35,7 +35,7 @@ namespace sunshine
             var createdAt = guild.CreatedAt();
             var members = guild.GetMembers().Values.ToList();
             var channels = guild.GetChannels().Values.ToList();
-            
+
             var embed = new LocalEmbed
             {
                 Title = guild.Name,
@@ -49,7 +49,6 @@ namespace sunshine
                             $"• Created : **{createdAt.ToUniversalTime().ToString($"HH:mm:ss, dd/MM/yyyy UTC", CultureInfo.InvariantCulture)}**"
                             + $" ({createdAt.Humanize()})",
                             $"• Owner : <@{guild.OwnerId}>",
-                            $"• Voice region : **`{guild.VoiceRegion}`**",
                             $"• Verification : **{guild.VerificationLevel.Humanize().Transform(To.SentenceCase)}**"
                         )
                     },

@@ -24,7 +24,7 @@ namespace sunshine
             RemoveComponent(StopButton);
         }
     }
-    
+
     internal class UrbanResponse
     {
         [JsonProperty("definition")] public string Definition { get; set; }
@@ -34,30 +34,30 @@ namespace sunshine
         [JsonProperty("thumbs_down")] public int Dislikes { get; set; }
     }
 
-    
+
     public class Urban : DiscordModuleBase
     {
         private readonly HttpClient httpClient = new();
         private const int MaxLen = 1000;
-        
+
         [Command("urban")]
         public async Task<DiscordCommandResult> Exec([Remainder] string query = "")
         {
             if (string.IsNullOrEmpty(query)) return Reply("I saw nothing to search about!");
-            
+
             var response = await httpClient.GetStringAsync(
                 $"http://api.urbandictionary.com/v0/define?term=${HttpUtility.UrlEncode(query)}"
             );
-            
+
             var _ = ((JObject)JsonConvert.DeserializeObject(response))["list"]
                 .ToObject<List<UrbanResponse>>();
             if (_ == null || _.Count < 1) return Reply("I found no results for your query.");
-            
+
             _.Sort(
                 (record1, record2) =>
                     record1.Likes - record1.Dislikes - (record2.Likes - record2.Dislikes)
             );
-            
+
             var embeds = _.Select((chosen, index) =>
             {
                 string def = chosen.Definition, eg = chosen.Example;
@@ -81,7 +81,7 @@ namespace sunshine
                     .WithColor(Color.Green);
                 return new Page
                 {
-                    Embeds = new[] {embed}
+                    Embeds = new[] { embed }
                 };
             }).ToArray();
 

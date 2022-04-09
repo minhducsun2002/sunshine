@@ -17,7 +17,7 @@ namespace sunshine
         [JsonProperty("synopsis")] public string Synopsis = "";
         [JsonProperty("title")] public string Title = "";
     }
-    
+
     internal class MangaDetailed : Manga
     {
         [JsonProperty("rank", NullValueHandling = NullValueHandling.Ignore)] internal long Rank;
