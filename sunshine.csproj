@@ -9,7 +9,6 @@
     <PackageReference Include="Humanizer" Version="2.11.10" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Qmmands" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
