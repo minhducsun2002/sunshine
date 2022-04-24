@@ -96,19 +96,19 @@ namespace sunshine
             StringBuilder output = new();
             if (startDate != null)
             {
-                output.Append(endDate != null ? "from" : "since");
+                output.Append((endDate != null ? "from" : "since") + " ");
                 output.Append(DateTime.Parse(startDate, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
-                    .ToLongDateString());
+                    .ToLongDateString() + " ");
             }
 
             if (endDate != null)
             {
-                output.Append("to");
+                output.Append("to ");
                 output.Append(DateTime.Parse(endDate, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
                     .ToLongDateString());
             }
 
-            var @out = output.ToString();
+            var @out = output.ToString().TrimEnd();
             if (bold) @out = $"**{@out}**";
             if (toBeInterpolated)
                 @out = @out.Transform(To.SentenceCase);
