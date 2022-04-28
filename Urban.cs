@@ -53,10 +53,8 @@ namespace sunshine
                 .ToObject<List<UrbanResponse>>();
             if (_ == null || _.Count < 1) return Reply("I found no results for your query.");
 
-            _.Sort(
-                (record1, record2) =>
-                    record1.Likes - record1.Dislikes - (record2.Likes - record2.Dislikes)
-            );
+            _ = _.OrderByDescending(r => r.Likes - r.Dislikes).ToList();
+            
 
             var embeds = _.Select((chosen, index) =>
             {
